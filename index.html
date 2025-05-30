@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Assistant App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better aesthetics, complementing Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light background for the page */
+        }
+        /* Ensure the main container is centered and takes appropriate width */
+        .container-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .app-container {
+            background-color: #ffffff;
+            border-radius: 1rem; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
+            padding: 2rem; /* p-8 */
+            width: 100%;
+            max-width: 48rem; /* max-w-3xl (approx) */
+            border: 1px solid #bfdbfe; /* border-blue-200 */
+        }
+        textarea {
+            transition: all 0.2s ease-in-out;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: transparent;
+            box-shadow: 0 0 0 2px #60a5fa; /* focus:ring-2 focus:ring-blue-500 */
+        }
+        button {
+            transition: all 0.3s ease-in-out;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: scale(1); /* Prevent hover effect when disabled */
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        /* Styling for prose-like content within results */
+        .prose br {
+            content: "";
+            display: block;
+            margin-bottom: 0.5em; /* Add some spacing between lines */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-wrapper bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="app-container">
+            <h1 class="text-4xl font-extrabold text-center text-blue-800 mb-6 tracking-tight">
+                Medical Assistant App
+            </h1>
+
+            <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6 text-sm">
+                <p class="font-semibold mb-2">Disclaimer:</p>
+                <p>This app is for informational purposes only and should not be used as a substitute for professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare professional for any health concerns.</p>
+            </div>
+
+            <div class="mb-6">
+                <label for="symptoms" class="block text-lg font-medium text-gray-700 mb-2">
+                    Enter Symptoms and Observations:
+                </label>
+                <textarea
+                    id="symptoms"
+                    class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out resize-y min-h-[120px] text-gray-800"
+                    placeholder="e.g., 'Fever, cough, sore throat, body aches, headache, fatigue for 3 days.'"
+                    rows="5"
+                ></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                <button
+                    id="getDiagnosisBtn"
+                    class="flex-1 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 shadow-lg"
+                >
+                    <span id="diagnosisBtnText" class="flex items-center justify-center">
+                        Get Differential Diagnosis
+                    </span>
+                </button>
+
+                <button
+                    id="clarifySymptomsBtn"
+                    class="flex-1 bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-300 shadow-lg"
+                >
+                    <span id="clarifyBtnText" class="flex items-center justify-center">
+                        Clarify Symptoms ✨
+                    </span>
+                </button>
+            </div>
+
+            <div id="symptomClarificationOutput" class="hidden bg-purple-50 border border-purple-200 text-purple-900 p-6 rounded-lg shadow-inner mb-6">
+                <h2 class="text-xl font-bold text-purple-700 mb-4">Symptom Clarification:</h2>
+                <div id="symptomClarificationContent" class="prose max-w-none"></div>
+            </div>
+
+            <div id="diagnosisResultOutput" class="hidden bg-blue-50 border border-blue-200 text-blue-900 p-6 rounded-lg shadow-inner mt-8">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4">Diagnosis & Treatment Suggestions:</h2>
+                <div id="diagnosisResultContent" class="prose max-w-none"></div>
+
+                <div class="mt-6 text-center">
+                    <button
+                        id="explainTreatmentsBtn"
+                        class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 shadow-lg"
+                    >
+                        <span id="explainBtnText" class="flex items-center justify-center">
+                            Explain Treatments ✨
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="treatmentExplanationOutput" class="hidden bg-green-50 border border-green-200 text-green-900 p-6 rounded-lg shadow-inner mt-6">
+                <h2 class="text-xl font-bold text-green-700 mb-4">Treatment Explanation:</h2>
+                <div id="treatmentExplanationContent" class="prose max-w-none"></div>
+            </div>
+
+            <div id="errorOutput" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mt-6">
+                <p class="font-semibold">Error:</p>
+                <p id="errorMessage"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const symptomsInput = document.getElementById('symptoms');
+        const getDiagnosisBtn = document.getElementById('getDiagnosisBtn');
+        const clarifySymptomsBtn = document.getElementById('clarifySymptomsBtn');
+        const explainTreatmentsBtn = document.getElementById('explainTreatmentsBtn');
+
+        const diagnosisResultOutput = document.getElementById('diagnosisResultOutput');
+        const diagnosisResultContent = document.getElementById('diagnosisResultContent');
+        const symptomClarificationOutput = document.getElementById('symptomClarificationOutput');
+        const symptomClarificationContent = document.getElementById('symptomClarificationContent');
+        const treatmentExplanationOutput = document.getElementById('treatmentExplanationOutput');
+        const treatmentExplanationContent = document.getElementById('treatmentExplanationContent');
+        const errorOutput = document.getElementById('errorOutput');
+        const errorMessage = document.getElementById('errorMessage');
+
+        const diagnosisBtnText = document.getElementById('diagnosisBtnText');
+        const clarifyBtnText = document.getElementById('clarifyBtnText');
+        const explainBtnText = document.getElementById('explainBtnText');
+
+        // State variables (equivalent to React's useState)
+        let isLoadingDiagnosis = false;
+        let isLoadingClarification = false;
+        let isLoadingTreatmentExplanation = false;
+
+        // Helper function to show/hide loading spinner on buttons
+        function toggleLoading(buttonTextElement, isLoading, originalText) {
+            if (isLoading) {
+                buttonTextElement.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    ${originalText.replace('Get Differential Diagnosis', 'Getting Diagnosis...').replace('Clarify Symptoms ✨', 'Clarifying...').replace('Explain Treatments ✨', 'Explaining...')}
+                `;
+            } else {
+                buttonTextElement.innerHTML = originalText;
+            }
+        }
+
+        // Helper function to update button disabled state
+        function updateButtonStates() {
+            const symptomsTrimmed = symptomsInput.value.trim();
+
+            getDiagnosisBtn.disabled = isLoadingDiagnosis || !symptomsTrimmed;
+            clarifySymptomsBtn.disabled = isLoadingClarification || !symptomsTrimmed;
+            explainTreatmentsBtn.disabled = isLoadingTreatmentExplanation || diagnosisResultContent.textContent.trim() === '';
+        }
+
+        // Initial button states
+        updateButtonStates();
+
+        // Listen for input changes to enable/disable buttons
+        symptomsInput.addEventListener('input', updateButtonStates);
+
+        /**
+         * Generic function to call the Gemini API.
+         * @param {string} prompt - The prompt to send to the LLM.
+         * @param {function} setLoadingStateSetter - A function to set the loading state variable.
+         * @param {HTMLElement} resultOutputElement - The DOM element to display the result.
+         * @param {HTMLElement} resultContentElement - The DOM element to display the result content.
+         * @param {HTMLElement} buttonTextElement - The DOM element containing the button's text.
+         * @param {string} originalButtonText - The original text of the button.
+         */
+        async function callGeminiAPI(prompt, setLoadingStateSetter, resultOutputElement, resultContentElement, buttonTextElement, originalButtonText) {
+            // Clear previous results and errors
+            resultContentElement.innerHTML = '';
+            resultOutputElement.classList.add('hidden');
+            errorOutput.classList.add('hidden');
+            errorMessage.textContent = '';
+
+            // Set loading state
+            setLoadingStateSetter(true);
+            toggleLoading(buttonTextElement, true, originalButtonText);
+            updateButtonStates();
+
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+
+                const apiKey = ""; // API key (left empty as per instructions, will be provided by environment)
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    resultContentElement.innerHTML = text.replace(/\n/g, '<br />'); // Preserve newlines
+                    resultOutputElement.classList.remove('hidden');
+                } else {
+                    errorMessage.textContent = 'Could not get a response. Please try again or rephrase your input.';
+                    errorOutput.classList.remove('hidden');
+                    console.error('Unexpected API response structure:', result);
+                }
+            } catch (err) {
+                errorMessage.textContent = 'An error occurred while fetching the response. Please check your network connection and try again.';
+                errorOutput.classList.remove('hidden');
+                console.error('Error during API call:', err);
+            } finally {
+                setLoadingStateSetter(false); // Always set loading state to false
+                toggleLoading(buttonTextElement, false, originalButtonText);
+                updateButtonStates();
+            }
+        }
+
+        /**
+         * Handles the click event for the "Get Differential Diagnosis" button.
+         */
+        getDiagnosisBtn.addEventListener('click', async () => {
+            // Clear previous results from other features when getting a new diagnosis
+            symptomClarificationOutput.classList.add('hidden');
+            symptomClarificationContent.innerHTML = '';
+            treatmentExplanationOutput.classList.add('hidden');
+            treatmentExplanationContent.innerHTML = '';
+
+            const prompt = `Based on the following symptoms and observations, provide a differential diagnosis and possible treatments.
+            
+            Symptoms and Observations: ${symptomsInput.value}
+            
+            Please format your response clearly, listing potential conditions and then associated treatment suggestions.
+            
+            IMPORTANT DISCLAIMER: This information is for educational purposes only and should not be considered medical advice. Always consult a qualified healthcare professional for diagnosis and treatment.`;
+
+            await callGeminiAPI(prompt, (state) => isLoadingDiagnosis = state, diagnosisResultOutput, diagnosisResultContent, diagnosisBtnText, 'Get Differential Diagnosis');
+        });
+
+        /**
+         * Handles the click event for the "Clarify Symptoms" button.
+         */
+        clarifySymptomsBtn.addEventListener('click', async () => {
+            const prompt = `Given the following symptoms: "${symptomsInput.value}", what clarifying questions would a doctor ask, or what related symptoms might be relevant to consider for a more accurate diagnosis? Please list them clearly.`;
+            await callGeminiAPI(prompt, (state) => isLoadingClarification = state, symptomClarificationOutput, symptomClarificationContent, clarifyBtnText, 'Clarify Symptoms ✨');
+        });
+
+        /**
+         * Handles the click event for the "Explain Treatments" button.
+         */
+        explainTreatmentsBtn.addEventListener('click', async () => {
+            if (diagnosisResultContent.textContent.trim() === '') {
+                errorMessage.textContent = "Please get a diagnosis first to explain treatments.";
+                errorOutput.classList.remove('hidden');
+                return;
+            }
+            const prompt = `Based on the following diagnosis and treatment suggestions: "${diagnosisResultContent.textContent}", please explain the suggested treatments in simpler terms. For each treatment, detail how it works or why it is typically used.`;
+            await callGeminiAPI(prompt, (state) => isLoadingTreatmentExplanation = state, treatmentExplanationOutput, treatmentExplanationContent, explainBtnText, 'Explain Treatments ✨');
+        });
+
+    </script>
+</body>
+</html>
