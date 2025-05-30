@@ -10,14 +10,16 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f4f8; /* Light background for the page */
+            /* Removed margin: 0; */
         }
         /* Ensure the main container is centered and takes appropriate width */
         .container-wrapper {
-            min-height: 100vh;
+            min-height: 100vh; /* Keep for vertical centering */
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            box-sizing: border-box;
         }
         .app-container {
             background-color: #ffffff;
@@ -25,8 +27,9 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
             padding: 2rem; /* p-8 */
             width: 100%;
-            max-width: 48rem; /* max-w-3xl (approx) */
+            max-width: 48rem; /* max-w-3xl (approx) - Adjusted for better centering */
             border: 1px solid #bfdbfe; /* border-blue-200 */
+            box-sizing: border-box;
         }
         textarea {
             transition: all 0.2s ease-in-out;
@@ -73,7 +76,12 @@
                 </select>
             </div>
 
-            <h1 id="appHeading" class="text-4xl font-extrabold text-center text-blue-800 mb-6 tracking-tight">
+            <h1 id="appHeading" class="text-4xl font-extrabold text-center text-blue-800 mb-6 tracking-tight flex items-center justify-center">
+                <svg class="inline-block h-10 w-10 mr-3" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50,0 Q10,10 0,50 Q10,90 50,100 Q90,90 100,50 Q90,10 50,0 Z" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="2"/>
+                    <rect x="40" y="25" width="20" height="50" fill="#FF0000"/>
+                    <rect x="25" y="40" width="50" height="20" fill="#FF0000"/>
+                </svg>
                 Medical Assistant App
             </h1>
 
@@ -172,7 +180,7 @@
         // Function to update all UI text based on the selected language
         function updateUI(lang) {
             appTitle.textContent = translations[lang].appTitle;
-            appHeading.textContent = translations[lang].appHeading;
+            appHeading.childNodes[2].nodeValue = translations[lang].appHeading; // Update text node directly
             disclaimerTitle.textContent = translations[lang].disclaimerTitle;
             disclaimerText.textContent = translations[lang].disclaimerText;
             symptomsLabel.textContent = translations[lang].symptomsLabel;
@@ -245,7 +253,7 @@
 
             // Set loading state
             setLoadingStateSetter(true);
-            toggleLoading(buttonTextElement, true, originalButtonTextKey);
+            toggleLoading(buttonTextElement, true, originalTextKey);
             updateButtonStates();
 
             try {
@@ -281,7 +289,7 @@
                 console.error('Error during API call:', err);
             } finally {
                 setLoadingStateSetter(false); // Always set loading state to false
-                toggleLoading(buttonTextElement, false, originalButtonTextKey);
+                toggleLoading(buttonTextElement, false, originalTextKey);
                 updateButtonStates();
             }
         }
