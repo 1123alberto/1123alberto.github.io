@@ -133,7 +133,7 @@ async function callGeminiAPI(prompt, setLoadingStateSetter, resultOutputElement,
         chatHistory.push({ role: "user", parts: [{ text: prompt }] });
         const payload = { contents: chatHistory };
 
-        const apiKey = ""; // API key (left empty as per instructions, will be provided by environment)
+        const apiKey = "417602721268-0j3hhe67is6355n5teasbbsa66gef3pq.apps.googleusercontent.com"; // API key (left empty as per instructions, will be provided by environment)
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
