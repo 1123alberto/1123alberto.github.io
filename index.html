@@ -9,7 +9,7 @@
         /* Custom styles for better aesthetics, complementing Tailwind */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Light background for the page */
+            background-color: navy; /* Changed background-color to navy */
             /* Removed margin: 0; */
         }
         /* Ensure the main container is centered and takes appropriate width */
@@ -20,6 +20,7 @@
             justify-content: center;
             padding: 1rem;
             box-sizing: border-box;
+            /* Removed width: 100vw; */
         }
         .app-container {
             background-color: #ffffff;
@@ -76,12 +77,15 @@
                 </select>
             </div>
 
-            <h1 id="appHeading" class="text-4xl font-extrabold text-center text-blue-800 mb-6 tracking-tight flex items-center justify-center">
-                <svg class="inline-block h-10 w-10 mr-3" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <div class="flex justify-center mb-4">
+                <svg class="h-20 w-20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <path d="M50,0 Q10,10 0,50 Q10,90 50,100 Q90,90 100,50 Q90,10 50,0 Z" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="2"/>
                     <rect x="40" y="25" width="20" height="50" fill="#FF0000"/>
                     <rect x="25" y="40" width="50" height="20" fill="#FF0000"/>
                 </svg>
+            </div>
+
+            <h1 id="appHeading" class="text-4xl font-extrabold text-center text-blue-800 mb-6 tracking-tight">
                 Medical Assistant App
             </h1>
 
@@ -180,7 +184,7 @@
         // Function to update all UI text based on the selected language
         function updateUI(lang) {
             appTitle.textContent = translations[lang].appTitle;
-            appHeading.childNodes[2].nodeValue = translations[lang].appHeading; // Update text node directly
+            appHeading.textContent = translations[lang].appHeading; // Simplified as SVG is now separate
             disclaimerTitle.textContent = translations[lang].disclaimerTitle;
             disclaimerText.textContent = translations[lang].disclaimerText;
             symptomsLabel.textContent = translations[lang].symptomsLabel;
