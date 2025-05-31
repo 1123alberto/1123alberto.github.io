@@ -173,14 +173,16 @@
 
                 <div id="languageToggle" class="circular-toggle">
                     <svg class="icon-flag-en icon-visible" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="24" height="24" fill="#B22234"/> <rect width="24" height="1.846" y="0" fill="#FFFFFF"/>
+                        <rect width="24" height="24" fill="#B22234"/>
+                        <rect width="24" height="1.846" y="0" fill="#FFFFFF"/>
                         <rect width="24" height="1.846" y="3.692" fill="#FFFFFF"/>
                         <rect width="24" height="1.846" y="7.384" fill="#FFFFFF"/>
                         <rect width="24" height="1.846" y="11.076" fill="#FFFFFF"/>
                         <rect width="24" height="1.846" y="14.768" fill="#FFFFFF"/>
                         <rect width="24" height="1.846" y="18.46" fill="#FFFFFF"/>
                         <rect width="24" height="1.846" y="22.152" fill="#FFFFFF"/>
-                        <rect width="9.6" height="13.846" fill="#3C3B6E"/> <circle cx="2" cy="2" r="0.8" fill="#FFFFFF"/>
+                        <rect width="9.6" height="13.846" fill="#3C3B6E"/>
+                        <circle cx="2" cy="2" r="0.8" fill="#FFFFFF"/>
                         <circle cx="4" cy="2" r="0.8" fill="#FFFFFF"/>
                         <circle cx="6" cy="2" r="0.8" fill="#FFFFFF"/>
                         <circle cx="3" cy="4" r="0.8" fill="#FFFFFF"/>
@@ -214,8 +216,8 @@
                 Medical Assistant App
             </h1>
 
-           
-        
+            
+
             <div class="mb-6">
                 <label for="symptoms" id="symptomsLabel" class="block text-lg font-medium text-gray-700 mb-2">
                     Enter Symptoms and Observations:
@@ -296,7 +298,7 @@
                 appTitle: 'Ιατρικός Βοηθός Εφαρμογή',
                 appHeading: 'Εφαρμογή Ιατρικού Βοηθού',
                 disclaimerTitle: 'Αποποίηση Ευθύνης:',
-                disclaimerText: 'Αυτή η εφαρμογή προορίζεται μόνο για ενημερωτικούς σκοπούς και δεν πρέπει να χρησιμοποιηθεί ως υποκατάστατο επαγγελματικής ιατρικής συμβουλής, διάγνωσης ή θεραπείας. Πάντα να συμβουλεύεστε έναν εξειδικευμένο επαγγελματία υγείας για οποιεσδήποτε ανησυχίες για την υγεία.',
+                disclaimerText: 'Αυτή η εφαρμογή προορίζεται μόνο για ενημερωτικούς σκοπούς και δεν πρέπει να χρησιμοποιηθεί ως υποκατάστατο επαγγελματικής ιατρικής συμβουλής, διάγνωσης ή θεραπείας. Πάντα να συμβουλεύεστε έναν εξειδικευμένο επαγγελματία υγείας για οποιεσδήποτε ανησυνίες για την υγεία.',
                 symptomsLabel: 'Εισαγάγετε Συμπτώματα και Παρατηρήσεις:',
                 symptomsPlaceholder: "π.χ., 'Πυρετός, βήχας, πονόλαιμος, μυϊκοί πόνοι, πονοκέφαλος, κόπωση για 3 ημέρες.'",
                 getDiagnosisBtn: 'Λήψη Διαφορικής Διάγνωσης',
@@ -462,13 +464,11 @@
          * Handles the click event for the "Get Differential Diagnosis" button.
          */
         getDiagnosisBtn.addEventListener('click', async () => {
-            const prompt = `Based on the following symptoms and observations, provide a differential diagnosis and possible treatments.
+            const prompt = `Based on the following symptoms and observations, provide ONLY a numbered list of potential conditions. Following the list include EXTREMELY BRIEF explanations or treatment suggestions as this is meant for the practitioner.
             
             Symptoms and Observations: ${symptomsInput.value}
             
-            Please format your response clearly, listing potential conditions and then associated treatment suggestions.
-            
-            IMPORTANT DISCLAIMER: This information is for educational purposes only and should not be considered medical advice. Always consult a qualified healthcare professional for diagnosis and treatment. Please respond in ${currentLanguage === 'el' ? 'Greek' : 'English'}.`;
+            Please respond in ${currentLanguage === 'el' ? 'Greek' : 'English'}.`;
 
             await callGeminiAPI(prompt);
         });
