@@ -6,10 +6,20 @@
     <title id="appTitle">Medical Assistant App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Configure Tailwind to use class strategy for dark mode */
+        html.dark {
+            /* For example, if you wanted a specific dark background for the whole page */
+            /* background-color: #1a202c; */
+        }
+
         /* Custom styles for better aesthetics, complementing Tailwind */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: navy; /* Changed background-color to navy */
+            background-color: navy; /* Default light mode background */
+            /* Dark mode background for body */
+            .dark & {
+                background-color: #1a202c; /* A dark blue-gray */
+            }
         }
         /* Ensure the main container is centered and takes appropriate width */
         .container-wrapper {
@@ -19,9 +29,10 @@
             justify-content: center;
             padding: 1rem;
             box-sizing: border-box;
+            transition: background-color 0.5s ease; /* Smooth transition for background */
         }
         .app-container {
-            background-color: #ffffff;
+            background-color: #ffffff; /* Light mode background */
             border-radius: 1rem; /* rounded-xl */
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
             padding: 2rem; /* p-8 */
@@ -29,14 +40,31 @@
             max-width: 48rem; /* max-w-3xl (approx) - Adjusted for better centering */
             border: 1px solid #bfdbfe; /* border-blue-200 */
             box-sizing: border-box;
+            transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease; /* Smooth transitions */
+
+            /* Dark mode styles for app container */
+            .dark & {
+                background-color: #2d3748; /* Darker gray */
+                border-color: #4a5568; /* Darker border */
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            }
         }
         textarea {
             transition: all 0.2s ease-in-out;
+            /* Dark mode for textarea */
+            .dark & {
+                background-color: #4a5568;
+                color: #e2e8f0;
+                border-color: #616e7f;
+            }
         }
         textarea:focus {
             outline: none;
             border-color: transparent;
             box-shadow: 0 0 0 2px #60a5fa; /* focus:ring-2 focus:ring-blue-500 */
+            .dark & {
+                box-shadow: 0 0 0 2px #90cdf4; /* Lighter blue for dark mode focus */
+            }
         }
         button {
             transition: all 0.3s ease-in-out;
@@ -62,17 +90,124 @@
             display: block;
             margin-bottom: 0.5em; /* Add some spacing between lines */
         }
+        /* Dark mode for text colors */
+        .dark .text-gray-700 { color: #cbd5e0; } /* labels */
+        .dark .text-blue-800 { color: #90cdf4; } /* app heading */
+        .dark .text-yellow-800 { color: #fbd38d; } /* disclaimer text */
+        .dark .text-blue-900 { color: #e2e8f0; } /* diagnosis result text */
+        .dark .text-blue-700 { color: #90cdf4; } /* diagnosis heading */
+        .dark .text-red-700 { color: #fc8181; } /* error text */
+
+        /* Dark mode for specific backgrounds */
+        .dark .bg-yellow-50 { background-color: #4a5568; border-color: #616e7f; } /* disclaimer box */
+        .dark .bg-blue-50 { background-color: #2d3748; border-color: #4a5568; } /* diagnosis result box */
+        .dark .bg-red-50 { background-color: #4a2020; border-color: #742a2a; } /* error box */
+
+        /* Styles for the circular toggles (Night Mode and Language) */
+        .circular-toggle {
+            width: 40px; /* Adjust size as needed */
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #cbd5e0; /* Light gray in light mode */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative; /* For absolute positioning of icons */
+            overflow: hidden; /* Hide overflowing icons during transition */
+
+            /* Dark mode styles for the toggle itself */
+            .dark & {
+                background-color: #4a5568; /* Darker gray in dark mode */
+            }
+        }
+        .circular-toggle:hover {
+            transform: scale(1.05);
+        }
+        .circular-toggle svg {
+            width: 20px; /* Decreased icon size */
+            height: 20px; /* Decreased icon size */
+            position: absolute; /* Allow icons to stack */
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .circular-toggle .icon-sun {
+            fill: #f59e0b; /* Amber color for sun */
+        }
+        .circular-toggle .icon-moon {
+            fill: #a0aec0; /* Blue-gray for moon */
+        }
+        .circular-toggle .icon-flag-en { /* Now represents US flag */
+            /* Specific colors for US flag */
+            fill: #FFFFFF; /* White for stars and stripes */
+        }
+        .circular-toggle .icon-flag-el {
+            /* Specific colors for Greek flag */
+            fill: #005bae; /* Blue */
+            stroke: #ffffff; /* White */
+            stroke-width: 1.5;
+        }
+        .circular-toggle .icon-hidden {
+            opacity: 0;
+            transform: scale(0.5); /* Animate out */
+        }
+        .circular-toggle .icon-visible {
+            opacity: 1;
+            transform: scale(1); /* Animate in */
+        }
     </style>
 </head>
 <body>
-    <div class="container-wrapper bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="container-wrapper bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
         <div class="app-container">
-            <div class="flex justify-end mb-4">
-                <label for="languageSelect" class="sr-only">Select Language</label>
-                <select id="languageSelect" class="p-2 border border-gray-300 rounded-lg text-gray-700">
-                    <option value="en">English</option>
-                    <option value="el">Ελληνικά</option>
-                </select>
+            <div class="flex justify-between items-center mb-4">
+                <div id="nightModeToggle" class="circular-toggle">
+                    <svg class="icon-sun icon-visible" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0 2a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM12 0a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1zm0 21a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zM3.525 4.929a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414L3.525 6.343a1 1 0 0 1 0-1.414zm14.142 14.142a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 0 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zM0 12a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2H1a1 1 0 0 1-1-1zm21 0a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1zM4.929 20.475a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 0 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zm14.142-14.142a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0z"/>
+                    </svg>
+                    <svg class="icon-moon icon-hidden" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.12-1.36a.75.75 0 0 1 .15-.75c.42-.42.7-.97.83-1.57a.75.75 0 0 1 .1-.7c-.01-.01-.01-.01-.02-.02a.75.75 0 0 1-.7-.1c-.6-.13-1.15-.41-1.57-.83a.75.75 0 0 1-.75-.15c-.44.08-.9.12-1.36.12A9 9 0 0 0 12 3z"/>
+                    </svg>
+                </div>
+
+                <div id="languageToggle" class="circular-toggle">
+                    <svg class="icon-flag-en icon-visible" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" fill="#B22234"/> <rect width="24" height="1.846" y="0" fill="#FFFFFF"/>
+                        <rect width="24" height="1.846" y="3.692" fill="#FFFFFF"/>
+                        <rect width="24" height="1.846" y="7.384" fill="#FFFFFF"/>
+                        <rect width="24" height="1.846" y="11.076" fill="#FFFFFF"/>
+                        <rect width="24" height="1.846" y="14.768" fill="#FFFFFF"/>
+                        <rect width="24" height="1.846" y="18.46" fill="#FFFFFF"/>
+                        <rect width="24" height="1.846" y="22.152" fill="#FFFFFF"/>
+                        <rect width="9.6" height="13.846" fill="#3C3B6E"/> <circle cx="2" cy="2" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="4" cy="2" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="6" cy="2" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="3" cy="4" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="5" cy="4" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="2" cy="6" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="4" cy="6" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="6" cy="6" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="3" cy="8" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="5" cy="8" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="2" cy="10" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="4" cy="10" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="6" cy="10" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="3" cy="12" r="0.8" fill="#FFFFFF"/>
+                        <circle cx="5" cy="12" r="0.8" fill="#FFFFFF"/>
+                    </svg>
+                    <svg class="icon-flag-el icon-hidden" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" fill="#005bae"/>
+                        <rect x="0" y="0" width="24" height="2.66" fill="#ffffff"/>
+                        <rect x="0" y="5.32" width="24" height="2.66" fill="#ffffff"/>
+                        <rect x="0" y="10.64" width="24" height="2.66" fill="#ffffff"/>
+                        <rect x="0" y="15.96" width="24" height="2.66" fill="#ffffff"/>
+                        <rect x="0" y="21.28" width="24" height="2.66" fill="#ffffff"/>
+                        <rect x="0" y="0" width="8" height="13.3" fill="#005bae"/>
+                        <rect x="0" y="5.32" width="8" height="2.66" fill="#ffffff"/>
+                        <rect x="2.66" y="0" width="2.66" height="13.3" fill="#ffffff"/>
+                    </svg>
+                </div>
             </div>
 
             <h1 id="appHeading" class="text-4xl font-extrabold text-center text-blue-800 mb-6 tracking-tight">
@@ -121,7 +256,14 @@
 
     <script>
         // Get references to DOM elements
-        const languageSelect = document.getElementById('languageSelect');
+        const languageToggle = document.getElementById('languageToggle');
+        const iconFlagEn = languageToggle.querySelector('.icon-flag-en');
+        const iconFlagEl = languageToggle.querySelector('.icon-flag-el');
+
+        const nightModeToggle = document.getElementById('nightModeToggle');
+        const iconSun = nightModeToggle.querySelector('.icon-sun');
+        const iconMoon = nightModeToggle.querySelector('.icon-moon');
+
         const appTitle = document.getElementById('appTitle');
         const appHeading = document.getElementById('appHeading');
         const disclaimerTitle = document.getElementById('disclaimerTitle');
@@ -169,7 +311,33 @@
             }
         };
 
-        let currentLanguage = 'en'; // Default language
+        let currentLanguage = localStorage.getItem('appLanguage') || 'en'; // Initialize from localStorage
+        let isNightMode = localStorage.getItem('nightMode') === 'true'; // Initialize from localStorage
+
+        // Function to apply/remove 'dark' class to html element and toggle icons
+        function applyTheme() {
+            if (isNightMode) {
+                document.documentElement.classList.add('dark');
+                iconSun.classList.add('icon-hidden');
+                iconMoon.classList.remove('icon-hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                iconSun.classList.remove('icon-hidden');
+                iconMoon.classList.add('icon-hidden');
+            }
+            localStorage.setItem('nightMode', isNightMode); // Save preference
+        }
+
+        // Function to update flag icons based on current language
+        function updateLanguageIcons() {
+            if (currentLanguage === 'en') {
+                iconFlagEn.classList.remove('icon-hidden');
+                iconFlagEl.classList.add('icon-hidden');
+            } else {
+                iconFlagEn.classList.add('icon-hidden');
+                iconFlagEl.classList.remove('icon-hidden');
+            }
+        }
 
         // Function to update all UI text based on the selected language
         function updateUI(lang) {
@@ -183,14 +351,23 @@
             diagnosisHeading.textContent = translations[lang].diagnosisHeading;
             errorTitle.textContent = translations[lang].errorTitle;
 
-            // Re-evaluate button states to apply correct loading text if already loading
-            updateButtonStates();
+            // Update night mode toggle icons based on current mode
+            applyTheme(); // Re-apply theme to update toggle text
+            updateLanguageIcons(); // Update language flag icons
+            updateButtonStates(); // Re-evaluate button states to apply correct loading text if already loading
         }
 
         // Event listener for language selection change
-        languageSelect.addEventListener('change', (event) => {
-            currentLanguage = event.target.value;
+        languageToggle.addEventListener('click', () => {
+            currentLanguage = (currentLanguage === 'en' ? 'el' : 'en'); // Toggle language
+            localStorage.setItem('appLanguage', currentLanguage); // Save language preference
             updateUI(currentLanguage);
+        });
+
+        // Event listener for night mode toggle
+        nightModeToggle.addEventListener('click', () => {
+            isNightMode = !isNightMode; // Toggle the mode
+            applyTheme(); // Apply the new theme
         });
 
         // State variables
@@ -221,8 +398,12 @@
             toggleLoading(diagnosisBtnText, isLoadingDiagnosis, 'getDiagnosisBtn');
         }
 
-        // Initial button states
-        updateButtonStates();
+        // Initial setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial language from localStorage or default
+            updateUI(currentLanguage); // This will also call applyTheme() and updateLanguageIcons()
+        });
+
 
         // Listen for input changes to enable/disable buttons
         symptomsInput.addEventListener('input', updateButtonStates);
@@ -247,7 +428,7 @@
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                 const payload = { contents: chatHistory };
 
-                const apiKey = "AIzaSyDadn8bhKVgMmFry6iTMdOGiVTaenlr78U"; // IMPORTANT: Replace with your actual Gemini API Key
+                const apiKey = ""; // IMPORTANT: Replace with your actual Gemini API Key
 
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
@@ -295,8 +476,12 @@
             await callGeminiAPI(prompt);
         });
 
-        // Initialize UI with default language (English)
-        updateUI(currentLanguage);
+        // Initial UI setup when the DOM is fully loaded
+        // This ensures all elements are available before trying to access them
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial language from localStorage or default
+            updateUI(currentLanguage); // This will also call applyTheme() and updateLanguageIcons()
+        });
 
     </script>
 </body>
