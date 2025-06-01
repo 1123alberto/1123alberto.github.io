@@ -1,5 +1,5 @@
 const CACHE_NAME = "medical-app-cache-v1";
-const urlsToCache = ["/", "/index.html", "/styles.css", "/script.js", "/icons/icon-192.png", "/icons/icon-512.png"];
+const urlsToCache = ["/", "/index.html", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 // Install Service Worker
 self.addEventListener("install", (event) => {
