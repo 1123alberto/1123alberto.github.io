@@ -71,6 +71,7 @@
                 box-shadow: 0 0 0 2px #90cdf4; /* Lighter blue for dark mode focus */
             }
         }
+        /* Keep general button transitions for all buttons */
         button {
             transition: all 0.3s ease-in-out;
         }
@@ -108,7 +109,7 @@
         .dark .bg-blue-50 { background-color: #2d3748; border-color: #4a5568; } /* diagnosis result box */
         .dark .bg-red-50 { background-color: #4a2020; border-color: #742a2a; } /* error box */
 
-        /* Styles for the circular toggles (Night Mode and Language) */
+        /* Styles for the circular toggles (Language only now) */
         .circular-toggle {
             width: 40px; /* Adjust size as needed */
             height: 40px;
@@ -137,12 +138,6 @@
             position: absolute; /* Allow icons to stack */
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
-        .circular-toggle .icon-sun {
-            fill: #f59e0b; /* Amber color for sun */
-        }
-        .circular-toggle .icon-moon {
-            fill: #a0aec0; /* Blue-gray for moon */
-        }
         .circular-toggle .icon-flag-en { /* Now represents US flag */
             /* Specific colors for US flag */
             fill: #FFFFFF; /* White for stars and stripes */
@@ -167,14 +162,12 @@
     <div class="container-wrapper bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
         <div class="app-container">
             <div class="flex justify-between items-center mb-4">
-                <div id="nightModeToggle" class="circular-toggle">
-                    <svg class="icon-sun icon-visible" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0 2a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM12 0a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1zm0 21a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zM3.525 4.929a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414L3.525 6.343a1 1 0 0 1 0-1.414zm14.142 14.142a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 0 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zM0 12a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2H1a1 1 0 0 1-1-1zm21 0a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1zM4.929 20.475a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 0 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zm14.142-14.142a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0z"/>
-                    </svg>
-                    <svg class="icon-moon icon-hidden" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.12-1.36a.75.75 0 0 1 .15-.75c.42-.42.7-.97.83-1.57a.75.75 0 0 1 .1-.7c-.01-.01-.01-.01-.02-.02a.75.75 0 0 1-.7-.1c-.6-.13-1.15-.41-1.57-.83a.75.75 0 0 1-.75-.15c-.44.08-.9.12-1.36.12A9 9 0 0 0 12 3z"/>
-                    </svg>
-                </div>
+                <button
+                    id="nightModeToggle"
+                    class="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500"
+                >
+                    Night Mode
+                </button>
 
                 <div id="languageToggle" class="circular-toggle">
                     <svg class="icon-flag-en icon-visible" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -267,9 +260,7 @@
         const iconFlagEn = languageToggle.querySelector('.icon-flag-en');
         const iconFlagEl = languageToggle.querySelector('.icon-flag-el');
 
-        const nightModeToggle = document.getElementById('nightModeToggle');
-        const iconSun = nightModeToggle.querySelector('.icon-sun');
-        const iconMoon = nightModeToggle.querySelector('.icon-moon');
+        const nightModeToggle = document.getElementById('nightModeToggle'); // This now refers to the button
 
         const appTitle = document.getElementById('appTitle');
         const appHeading = document.getElementById('appHeading');
@@ -300,7 +291,9 @@
                 diagnosisHeading: 'Diagnosis & Treatment Suggestions:',
                 errorTitle: 'Error:',
                 errorMessageGeneric: 'Could not get a response. Please try again or rephrase your input.',
-                errorMessageNetwork: 'An error occurred while fetching the response. Please check your network connection and try again.'
+                errorMessageNetwork: 'An error occurred while fetching the response. Please check your network connection and try again.',
+                nightModeButton: 'Night Mode', // Add text for the new button
+                dayModeButton: 'Day Mode' // Add text for the new button
             },
             el: {
                 appTitle: 'Ιατρικός Βοηθός Εφαρμογή',
@@ -314,23 +307,23 @@
                 diagnosisHeading: 'Προτάσεις Διάγνωσης & Θεραπείας:',
                 errorTitle: 'Σφάλμα:',
                 errorMessageGeneric: 'Δεν ήταν δυνατή η λήψη απάντησης. Παρακαλώ δοκιμάστε ξανά ή αναδιατυπώστε την εισαγωγή σας.',
-                errorMessageNetwork: 'Παρουσιάστηκε σφάλμα κατά τη λήψη της απάντησης. Ελέγξτε τη σύνδεσή σας στο δίκτυο και δοκιμάστε ξανά.'
+                errorMessageNetwork: 'Παρουσιάστηκε σφάλμα κατά τη λήψη της απάντησης. Ελέγξτε τη σύνδεσή σας στο δίκτυο και δοκιμάστε ξανά.',
+                nightModeButton: 'Νυχτερινή Λειτουργία', // Add text for the new button
+                dayModeButton: 'Ημερήσια Λειτουργία' // Add text for the new button
             }
         };
 
         let currentLanguage = localStorage.getItem('appLanguage') || 'en'; // Initialize from localStorage
         let isNightMode = localStorage.getItem('nightMode') === 'true'; // Initialize from localStorage
 
-        // Function to apply/remove 'dark' class to html element and toggle icons
+        // Function to apply/remove 'dark' class to html element and update button text
         function applyTheme() {
             if (isNightMode) {
                 document.documentElement.classList.add('dark');
-                iconSun.classList.add('icon-hidden');
-                iconMoon.classList.remove('icon-hidden');
+                nightModeToggle.textContent = translations[currentLanguage].dayModeButton; // Change button text to "Day Mode"
             } else {
                 document.documentElement.classList.remove('dark');
-                iconSun.classList.remove('icon-hidden');
-                iconMoon.classList.add('icon-hidden');
+                nightModeToggle.textContent = translations[currentLanguage].nightModeButton; // Change button text to "Night Mode"
             }
             localStorage.setItem('nightMode', isNightMode); // Save preference
         }
@@ -358,7 +351,7 @@
             diagnosisHeading.textContent = translations[lang].diagnosisHeading;
             errorTitle.textContent = translations[lang].errorTitle;
 
-            // Update night mode toggle icons based on current mode
+            // Update night mode toggle button text based on current mode
             applyTheme(); // Re-apply theme to update toggle text
             updateLanguageIcons(); // Update language flag icons
             updateButtonStates(); // Re-evaluate button states to apply correct loading text if already loading
@@ -371,7 +364,7 @@
             updateUI(currentLanguage);
         });
 
-        // Event listener for night mode toggle
+        // Event listener for night mode toggle (now a button)
         nightModeToggle.addEventListener('click', () => {
             isNightMode = !isNightMode; // Toggle the mode
             applyTheme(); // Apply the new theme
@@ -435,7 +428,11 @@
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                 const payload = { contents: chatHistory };
 
-                const apiKey = "AIzaSyDadn8bhKVgMmFry6iTMdOGiVTaenlr78U"; // IMPORTANT: Replace with your actual Gemini API Key
+                // IMPORTANT: Replace with your actual Gemini API Key
+                // 
+                // Using a placeholder API key. For a real application, ensure your API key
+                // is securely handled (e.g., via a backend server, not directly in frontend code).
+                const apiKey = "YOUR_GEMINI_API_KEY_HERE"; 
 
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
@@ -473,9 +470,9 @@
          */
         getDiagnosisBtn.addEventListener('click', async () => {
             const prompt = `Based on the following symptoms and observations, provide ONLY a numbered list of potential conditions. Following the list include EXTREMELY BRIEF explanations or treatment suggestions as this is meant for the practitioner.
-            
+
             Symptoms and Observations: ${symptomsInput.value}
-            
+
             Please respond in ${currentLanguage === 'el' ? 'Greek' : 'English'}.`;
 
             await callGeminiAPI(prompt);
@@ -498,7 +495,6 @@
           console.log("ServiceWorker registration failed: ", error);
         });
         }
-
     </script>
 </body>
 </html>
