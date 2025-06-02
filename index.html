@@ -106,51 +106,11 @@
         .dark .bg-blue-50 { background-color: #2d3748; border-color: #4a5568; } /* diagnosis result box */
         .dark .bg-red-50 { background-color: #4a2020; border-color: #742a2a; } /* error box */
 
-        /* Styles for the language toggle (still circular) */
-        .circular-toggle {
-            width: 40px; /* Adjust size as needed */
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            background-color: #cbd5e0; /* Light gray in light mode */
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            position: relative; /* For absolute positioning of icons */
-            overflow: hidden; /* Hide overflowing icons during transition */
+        /* Pill toggle text needs to be accessible */
+        .pill-toggle-text {
+             line-height: 2rem; /* h-8 = 2rem */
+        }
 
-            /* Dark mode styles for the toggle itself */
-            .dark & {
-                background-color: #4a5568; /* Darker gray in dark mode */
-            }
-        }
-        .circular-toggle:hover {
-            transform: scale(1.05);
-        }
-        .circular-toggle svg {
-            width: 20px; /* Decreased icon size */
-            height: 15px; /* Decreased icon size */
-            position: absolute; /* Allow icons to stack */
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .circular-toggle .icon-flag-en {
-            fill: #FFFFFF;
-        }
-        .circular-toggle .icon-flag-el {
-            fill: #005bae;
-            stroke: #ffffff;
-            stroke-width: 1.5;
-        }
-        .circular-toggle .icon-hidden {
-            opacity: 0;
-            transform: scale(0.5);
-        }
-        .circular-toggle .icon-visible {
-            opacity: 1;
-            transform: scale(1);
-        }
     </style>
 </head>
 <body>
@@ -168,44 +128,10 @@
                     <div id="nightModeSlider" class="absolute left-1 w-8 h-8 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out"></div>
                 </div>
 
-                <div id="languageToggle" class="circular-toggle">
-                    <svg class="icon-flag-en icon-visible" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="24" height="24" fill="#B22234"/>
-                        <rect width="24" height="1.846" y="0" fill="#FFFFFF"/>
-                        <rect width="24" height="1.846" y="3.692" fill="#FFFFFF"/>
-                        <rect width="24" height="1.846" y="7.384" fill="#FFFFFF"/>
-                        <rect width="24" height="1.846" y="11.076" fill="#FFFFFF"/>
-                        <rect width="24" height="1.846" y="14.768" fill="#FFFFFF"/>
-                        <rect width="24" height="1.846" y="18.46" fill="#FFFFFF"/>
-                        <rect width="24" height="1.846" y="22.152" fill="#FFFFFF"/>
-                        <rect width="9.6" height="13.846" fill="#3C3B6E"/>
-                        <circle cx="2" cy="2" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="4" cy="2" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="6" cy="2" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="3" cy="4" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="5" cy="4" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="2" cy="6" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="4" cy="6" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="6" cy="6" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="3" cy="8" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="5" cy="8" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="2" cy="10" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="4" cy="10" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="6" cy="10" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="3" cy="12" r="0.8" fill="#FFFFFF"/>
-                        <circle cx="5" cy="12" r="0.8" fill="#FFFFFF"/>
-                    </svg>
-                    <svg class="icon-flag-el icon-hidden" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="24" height="24" fill="#005bae"/>
-                        <rect x="0" y="0" width="24" height="2.66" fill="#ffffff"/>
-                        <rect x="0" y="5.32" width="24" height="2.66" fill="#ffffff"/>
-                        <rect x="0" y="10.64" width="24" height="2.66" fill="#ffffff"/>
-                        <rect x="0" y="15.96" width="24" height="2.66" fill="#ffffff"/>
-                        <rect x="0" y="21.28" width="24" height="2.66" fill="#ffffff"/>
-                        <rect x="0" y="0" width="8" height="13.3" fill="#005bae"/>
-                        <rect x="0" y="5.32" width="8" height="2.66" fill="#ffffff"/>
-                        <rect x="2.66" y="0" width="2.66" height="13.3" fill="#ffffff"/>
-                    </svg>
+                <div id="languagePillToggle" class="relative w-20 h-10 rounded-full p-1 cursor-pointer flex items-center justify-around text-white dark:text-gray-200 bg-green-500 dark:bg-green-700 transition-colors duration-300 ease-in-out">
+                    <span class="text-xs font-bold z-10 pill-toggle-text">EN</span>
+                    <span class="text-xs font-bold z-10 pill-toggle-text">ΕΛ</span>
+                    <div id="languageSlider" class="absolute top-1 left-1 w-8 h-8 bg-white dark:bg-gray-300 rounded-full shadow-md transform transition-transform duration-300 ease-in-out"></div>
                 </div>
             </div>
 
@@ -255,15 +181,15 @@
 
     <script>
         // Get references to DOM elements
-        const languageToggle = document.getElementById('languageToggle');
-        const iconFlagEn = languageToggle.querySelector('.icon-flag-en');
-        const iconFlagEl = languageToggle.querySelector('.icon-flag-el');
-
-        // New references for the custom night mode toggle
         const nightModeToggle = document.getElementById('nightModeToggle');
         const nightModeSlider = document.getElementById('nightModeSlider');
         const sunIcon = document.getElementById('sunIcon');
         const moonIcon = document.getElementById('moonIcon');
+
+        // New language pill toggle elements
+        const languagePillToggle = document.getElementById('languagePillToggle');
+        const languageSlider = document.getElementById('languageSlider');
+
 
         const appTitle = document.getElementById('appTitle');
         const appHeading = document.getElementById('appHeading');
@@ -312,191 +238,32 @@
             }
         };
 
-        let currentLanguage = localStorage.getItem('appLanguage') || 'en'; // Initialize from localStorage
-        let isNightMode = localStorage.getItem('nightMode') === 'true'; // Initialize from localStorage
+        let currentLanguage = localStorage.getItem('appLanguage') || 'en';
+        let isNightMode = localStorage.getItem('nightMode') === 'true';
 
-        // Function to apply/remove 'dark' class to html element and update toggle visuals
         function applyTheme() {
             if (isNightMode) {
                 document.documentElement.classList.add('dark');
-                nightModeSlider.classList.add('translate-x-[40px]'); // Move slider to the right (80px width - 32px slider - 2*4px padding = 40px)
-                sunIcon.classList.add('opacity-0'); // Hide sun
-                moonIcon.classList.remove('opacity-0'); // Show moon
+                nightModeSlider.classList.add('translate-x-[40px]');
+                sunIcon.classList.add('opacity-0');
+                moonIcon.classList.remove('opacity-0');
             } else {
                 document.documentElement.classList.remove('dark');
-                nightModeSlider.classList.remove('translate-x-[40px]'); // Move slider back to left
-                sunIcon.classList.remove('opacity-0'); // Show sun
-                moonIcon.classList.add('opacity-0'); // Hide moon
+                nightModeSlider.classList.remove('translate-x-[40px]');
+                sunIcon.classList.remove('opacity-0');
+                moonIcon.classList.add('opacity-0');
             }
-            localStorage.setItem('nightMode', isNightMode); // Save preference
+            localStorage.setItem('nightMode', isNightMode);
         }
 
-        // Function to update flag icons based on current language
-        function updateLanguageIcons() {
+        // Function to update the language pill toggle's visual state
+        function updateLanguagePillVisuals() {
             if (currentLanguage === 'en') {
-                iconFlagEn.classList.remove('icon-hidden');
-                iconFlagEl.classList.add('icon-hidden');
-            } else {
-                iconFlagEn.classList.add('icon-hidden');
-                iconFlagEl.classList.remove('icon-hidden');
+                languageSlider.classList.remove('translate-x-[40px]'); // Assuming 40px is the correct offset
+            } else { // 'el'
+                languageSlider.classList.add('translate-x-[40px]');
             }
         }
 
-        // Function to update all UI text based on the selected language
         function updateUI(lang) {
-            appTitle.textContent = translations[lang].appTitle;
-            appHeading.textContent = translations[lang].appHeading;
-            disclaimerTitle.textContent = translations[lang].disclaimerTitle;
-            disclaimerText.textContent = translations[lang].disclaimerText;
-            symptomsLabel.textContent = translations[lang].symptomsLabel;
-            symptomsInput.placeholder = translations[lang].symptomsPlaceholder;
-            diagnosisBtnText.innerHTML = translations[lang].getDiagnosisBtn;
-            diagnosisHeading.textContent = translations[lang].diagnosisHeading;
-            errorTitle.textContent = translations[lang].errorTitle;
-
-            // Update night mode toggle icons based on current mode
-            applyTheme(); // Re-apply theme to update toggle state
-            updateLanguageIcons(); // Update language flag icons
-            updateButtonStates(); // Re-evaluate button states to apply correct loading text if already loading
-        }
-
-        // Event listener for language selection change
-        languageToggle.addEventListener('click', () => {
-            currentLanguage = (currentLanguage === 'en' ? 'el' : 'en'); // Toggle language
-            localStorage.setItem('appLanguage', currentLanguage); // Save language preference
-            updateUI(currentLanguage);
-        });
-
-        // Event listener for night mode toggle
-        nightModeToggle.addEventListener('click', () => {
-            isNightMode = !isNightMode; // Toggle the mode
-            applyTheme(); // Apply the new theme
-        });
-
-        // State variables
-        let isLoadingDiagnosis = false;
-
-        // Helper function to show/hide loading spinner on buttons
-        function toggleLoading(buttonTextElement, isLoading, originalTextKey) {
-            const loadingTextKey = originalTextKey + 'Loading';
-            const textToDisplay = isLoading ? translations[currentLanguage][loadingTextKey] : translations[currentLanguage][originalTextKey];
-
-            if (isLoading) {
-                buttonTextElement.innerHTML = `
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    ${textToDisplay}
-                `;
-            } else {
-                buttonTextElement.innerHTML = textToDisplay;
-            }
-        }
-
-        // Helper function to update button disabled state
-        function updateButtonStates() {
-            const symptomsTrimmed = symptomsInput.value.trim();
-            getDiagnosisBtn.disabled = isLoadingDiagnosis || !symptomsTrimmed;
-            toggleLoading(diagnosisBtnText, isLoadingDiagnosis, 'getDiagnosisBtn');
-        }
-
-        // Initial setup on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set initial language from localStorage or default
-            updateUI(currentLanguage); // This will also call applyTheme() and updateLanguageIcons()
-        });
-
-        // Listen for input changes to enable/disable buttons
-        symptomsInput.addEventListener('input', updateButtonStates);
-
-        /**
-         * Function to call the Gemini API.
-         * @param {string} prompt - The prompt to send to the LLM.
-         */
-        async function callGeminiAPI(prompt) {
-            // Clear previous results and errors
-            diagnosisResultContent.innerHTML = '';
-            diagnosisResultOutput.classList.add('hidden');
-            errorOutput.classList.add('hidden');
-            errorMessage.textContent = '';
-
-            // Set loading state
-            isLoadingDiagnosis = true;
-            updateButtonStates();
-
-            try {
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-
-                // IMPORTANT: Replace with your actual Gemini API Key
-                // 
-                // Using a placeholder API key. For a real application, ensure your API key
-                // is securely handled (e.g., via a backend server, not directly in frontend code).
-                const apiKey = "YOUR_GEMINI_API_KEY_HERE"; 
-
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    diagnosisResultContent.innerHTML = text.replace(/\n/g, '<br />'); // Preserve newlines
-                    diagnosisResultOutput.classList.remove('hidden');
-                } else {
-                    errorMessage.textContent = translations[currentLanguage].errorMessageGeneric;
-                    errorOutput.classList.remove('hidden');
-                    console.error('Unexpected API response structure:', result);
-                }
-            } catch (err) {
-                errorMessage.textContent = translations[currentLanguage].errorMessageNetwork;
-                errorOutput.classList.remove('hidden');
-                console.error('Error during API call:', err);
-            } finally {
-                isLoadingDiagnosis = false; // Always set loading state to false
-                updateButtonStates();
-            }
-        }
-
-        /**
-         * Handles the click event for the "Get Differential Diagnosis" button.
-         */
-        getDiagnosisBtn.addEventListener('click', async () => {
-            const prompt = `Based on the following symptoms and observations, provide ONLY a numbered list of potential conditions. Following the list include EXTREMELY BRIEF explanations or treatment suggestions as this is meant for the practitioner.
-
-            Symptoms and Observations: ${symptomsInput.value}
-
-            Please respond in ${currentLanguage === 'el' ? 'Greek' : 'English'}.`;
-
-            await callGeminiAPI(prompt);
-        });
-
-        // Initial UI setup when the DOM is fully loaded
-        // This ensures all elements are available before trying to access them
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set initial language from localStorage or default
-            updateUI(currentLanguage); // This will also call applyTheme() and updateLanguageIcons()
-        });
-
-        // Registering the Service Worker
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("/service-worker.js")
-            .then((registration) => {
-          console.log("ServiceWorker registered with scope: ", registration.scope);
-        })
-            .catch((error) => {
-          console.log("ServiceWorker registration failed: ", error);
-        });
-        }
-    </script>
-</body>
-</html>
+            appTitle.textContent
