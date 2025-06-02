@@ -71,7 +71,6 @@
                 box-shadow: 0 0 0 2px #90cdf4; /* Lighter blue for dark mode focus */
             }
         }
-        /* Keep general button transitions for all buttons */
         button {
             transition: all 0.3s ease-in-out;
         }
@@ -99,17 +98,15 @@
         /* Dark mode for text colors */
         .dark .text-gray-700 { color: #cbd5e0; } /* labels */
         .dark .text-blue-800 { color: #90cdf4; } /* app heading */
-        /* .dark .text-yellow-800 { color: #fbd38d; } */ /* disclaimer text - no longer needed */
         .dark .text-blue-900 { color: #e2e8f0; } /* diagnosis result text */
         .dark .text-blue-700 { color: #90cdf4; } /* diagnosis heading */
         .dark .text-red-700 { color: #fc8181; } /* error text */
 
         /* Dark mode for specific backgrounds */
-        /* .dark .bg-yellow-50 { background-color: #4a5568; border-color: #616e7f; } */ /* disclaimer box - no longer needed */
         .dark .bg-blue-50 { background-color: #2d3748; border-color: #4a5568; } /* diagnosis result box */
         .dark .bg-red-50 { background-color: #4a2020; border-color: #742a2a; } /* error box */
 
-        /* Styles for the circular toggles (Language only now) */
+        /* Styles for the language toggle (still circular) */
         .circular-toggle {
             width: 40px; /* Adjust size as needed */
             height: 40px;
@@ -138,23 +135,21 @@
             position: absolute; /* Allow icons to stack */
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
-        .circular-toggle .icon-flag-en { /* Now represents US flag */
-            /* Specific colors for US flag */
-            fill: #FFFFFF; /* White for stars and stripes */
+        .circular-toggle .icon-flag-en {
+            fill: #FFFFFF;
         }
         .circular-toggle .icon-flag-el {
-            /* Specific colors for Greek flag */
-            fill: #005bae; /* Blue */
-            stroke: #ffffff; /* White */
+            fill: #005bae;
+            stroke: #ffffff;
             stroke-width: 1.5;
         }
         .circular-toggle .icon-hidden {
             opacity: 0;
-            transform: scale(0.5); /* Animate out */
+            transform: scale(0.5);
         }
         .circular-toggle .icon-visible {
             opacity: 1;
-            transform: scale(1); /* Animate in */
+            transform: scale(1);
         }
     </style>
 </head>
@@ -162,12 +157,16 @@
     <div class="container-wrapper bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
         <div class="app-container">
             <div class="flex justify-between items-center mb-4">
-                <button
-                    id="nightModeToggle"
-                    class="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500"
-                >
-                    Night Mode
-                </button>
+                <div id="nightModeToggle" class="relative w-20 h-10 rounded-full p-1 cursor-pointer transition-colors duration-300 ease-in-out
+                    bg-blue-500 dark:bg-gray-700">
+                    <svg id="sunIcon" class="absolute top-1/2 left-2 -translate-y-1/2 w-6 h-6 text-yellow-300 transition-opacity duration-300 ease-in-out" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0 2a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM12 0a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1zm0 21a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zM3.525 4.929a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414L3.525 6.343a1 1 0 0 1 0-1.414zm14.142 14.142a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 0 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zM0 12a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2H1a1 1 0 0 1-1-1zm21 0a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1zM4.929 20.475a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 0 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zm14.142-14.142a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0z"/>
+                    </svg>
+                    <svg id="moonIcon" class="absolute top-1/2 right-2 -translate-y-1/2 w-6 h-6 text-white opacity-0 transition-opacity duration-300 ease-in-out" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.12-1.36a.75.75 0 0 1 .15-.75c.42-.42.7-.97.83-1.57a.75.75 0 0 1 .1-.7c-.01-.01-.01-.01-.02-.02a.75.75 0 0 1-.7-.1c-.6-.13-1.15-.41-1.57-.83a.75.75 0 0 1-.75-.15c-.44.08-.9.12-1.36.12A9 9 0 0 0 12 3z"/>
+                    </svg>
+                    <div id="nightModeSlider" class="absolute left-1 w-8 h-8 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out"></div>
+                </div>
 
                 <div id="languageToggle" class="circular-toggle">
                     <svg class="icon-flag-en icon-visible" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -260,7 +259,11 @@
         const iconFlagEn = languageToggle.querySelector('.icon-flag-en');
         const iconFlagEl = languageToggle.querySelector('.icon-flag-el');
 
-        const nightModeToggle = document.getElementById('nightModeToggle'); // This now refers to the button
+        // New references for the custom night mode toggle
+        const nightModeToggle = document.getElementById('nightModeToggle');
+        const nightModeSlider = document.getElementById('nightModeSlider');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
 
         const appTitle = document.getElementById('appTitle');
         const appHeading = document.getElementById('appHeading');
@@ -291,9 +294,7 @@
                 diagnosisHeading: 'Diagnosis & Treatment Suggestions:',
                 errorTitle: 'Error:',
                 errorMessageGeneric: 'Could not get a response. Please try again or rephrase your input.',
-                errorMessageNetwork: 'An error occurred while fetching the response. Please check your network connection and try again.',
-                nightModeButton: 'Night Mode', // Add text for the new button
-                dayModeButton: 'Day Mode' // Add text for the new button
+                errorMessageNetwork: 'An error occurred while fetching the response. Please check your network connection and try again.'
             },
             el: {
                 appTitle: 'Ιατρικός Βοηθός Εφαρμογή',
@@ -307,23 +308,25 @@
                 diagnosisHeading: 'Προτάσεις Διάγνωσης & Θεραπείας:',
                 errorTitle: 'Σφάλμα:',
                 errorMessageGeneric: 'Δεν ήταν δυνατή η λήψη απάντησης. Παρακαλώ δοκιμάστε ξανά ή αναδιατυπώστε την εισαγωγή σας.',
-                errorMessageNetwork: 'Παρουσιάστηκε σφάλμα κατά τη λήψη της απάντησης. Ελέγξτε τη σύνδεσή σας στο δίκτυο και δοκιμάστε ξανά.',
-                nightModeButton: 'Νυχτερινή Λειτουργία', // Add text for the new button
-                dayModeButton: 'Ημερήσια Λειτουργία' // Add text for the new button
+                errorMessageNetwork: 'Παρουσιάστηκε σφάλμα κατά τη λήψη της απάντησης. Ελέγξτε τη σύνδεσή σας στο δίκτυο και δοκιμάστε ξανά.'
             }
         };
 
         let currentLanguage = localStorage.getItem('appLanguage') || 'en'; // Initialize from localStorage
         let isNightMode = localStorage.getItem('nightMode') === 'true'; // Initialize from localStorage
 
-        // Function to apply/remove 'dark' class to html element and update button text
+        // Function to apply/remove 'dark' class to html element and update toggle visuals
         function applyTheme() {
             if (isNightMode) {
                 document.documentElement.classList.add('dark');
-                nightModeToggle.textContent = translations[currentLanguage].dayModeButton; // Change button text to "Day Mode"
+                nightModeSlider.classList.add('translate-x-[40px]'); // Move slider to the right (80px width - 32px slider - 2*4px padding = 40px)
+                sunIcon.classList.add('opacity-0'); // Hide sun
+                moonIcon.classList.remove('opacity-0'); // Show moon
             } else {
                 document.documentElement.classList.remove('dark');
-                nightModeToggle.textContent = translations[currentLanguage].nightModeButton; // Change button text to "Night Mode"
+                nightModeSlider.classList.remove('translate-x-[40px]'); // Move slider back to left
+                sunIcon.classList.remove('opacity-0'); // Show sun
+                moonIcon.classList.add('opacity-0'); // Hide moon
             }
             localStorage.setItem('nightMode', isNightMode); // Save preference
         }
@@ -351,8 +354,8 @@
             diagnosisHeading.textContent = translations[lang].diagnosisHeading;
             errorTitle.textContent = translations[lang].errorTitle;
 
-            // Update night mode toggle button text based on current mode
-            applyTheme(); // Re-apply theme to update toggle text
+            // Update night mode toggle icons based on current mode
+            applyTheme(); // Re-apply theme to update toggle state
             updateLanguageIcons(); // Update language flag icons
             updateButtonStates(); // Re-evaluate button states to apply correct loading text if already loading
         }
@@ -364,7 +367,7 @@
             updateUI(currentLanguage);
         });
 
-        // Event listener for night mode toggle (now a button)
+        // Event listener for night mode toggle
         nightModeToggle.addEventListener('click', () => {
             isNightMode = !isNightMode; // Toggle the mode
             applyTheme(); // Apply the new theme
@@ -403,7 +406,6 @@
             // Set initial language from localStorage or default
             updateUI(currentLanguage); // This will also call applyTheme() and updateLanguageIcons()
         });
-
 
         // Listen for input changes to enable/disable buttons
         symptomsInput.addEventListener('input', updateButtonStates);
